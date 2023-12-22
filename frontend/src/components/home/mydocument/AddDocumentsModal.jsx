@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axiosInstance from "../../../axios/Axios";
+import {useDispatch, useSelector} from 'react-redux'
+import { changeContent, changeCreatedAt, changeTitle } from '../../../features/documentSlice';
 
 const style = {
   position: "absolute",
@@ -22,39 +24,72 @@ const style = {
 
 const AddDocumentsModal = (props) => {
   const [open, setOpen] = useState(true);
-  const handleClose = () => setOpen(false);
   const [documentTitle, setDocumentTitle] = useState("");
   const [documentContent, setDocumentContent] = useState("");
 
-  const handleSubmit = () => {
+  const [ws, setWs] = useState(null);
+  // const [documents, setDocuments] = useState([]);
+  const [userId, setUserId] = useState(false)
+  const dispatch = useDispatch()
+  const updatedData = useSelector((state)=>state.documentReducer)
+
+  console.log(updatedData,"updated data here");
+
+  useEffect(() => {
+    const socket = new W3CWebSocket('ws://localhost:8000/ws/documents/');
+
     const userData = localStorage.getItem("userDetails");
-    if (userData) {
-      const parseData = JSON.parse(userData);
 
-      const values = {
-        documentTitle: documentTitle,
-        documentContent: documentContent,
-        id: parseData.id,
-      };
+    socket.onopen = () => {
+      console.log('WebSocket connected');
+      // if (userData) {
+      //   const parseData = JSON.parse(userData);
+      //   const userId = parseData.id;
+      //   setUserId(userId)
+        // Fetch initial documents when WebSocket connection is open
+        // socket.send(JSON.stringify({ action: 'get_documents', userId: userId }));
+      // }
+    };
 
-      axiosInstance.post("add-documents/", values).then((res) => {
-        console.log(res.data,"////////////");
-        if (res.data.message === "Document created successfully") {
-          props.setRender((prev) => !prev);
-          toast.success(res.data.message, {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
-        } else {
-          toast.warning(res.data.message, {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-          });
-        }
-      });
-      handleClose();
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log(data, "data in onmessage//////modal");
+
+      // Assuming the server sends updated documents as part of the response
+      if (data.action === 'document_added') {
+        dispatch(changeContent(data.documents.content))
+        dispatch(changeCreatedAt(data.documents.created_at))
+        dispatch(changeTitle(data.documents.title))
+      }
+    };
+
+    socket.onclose = () => {
+      console.log('WebSocket closed');
+    };
+
+    setWs(socket);
+
+    // Note: No return cleanup function is needed here
+  }, []);
+
+  const addDocument = (e) => {
+    e.preventDefault()
+    const documentData = {
+      'userId' : userId,
+      'title': documentTitle,
+      'content' : documentContent
     }
+    console.log(documentData,"documentdata///");
+    ws.send(JSON.stringify({ action: 'add_document', documentData }));
+    handleClose();
   };
+
+  const handleClose = () => {
+    setOpen(false)
+    props.setShowAddModal((prev)=>!prev)
+  };
+
+  
   return (
     <>
       <Modal open={open} onClose={handleClose} className="edit-modal">
@@ -64,7 +99,7 @@ const AddDocumentsModal = (props) => {
           </Typography>
           <br />
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={addDocument}>
             <TextField
             sx={{marginBottom:'5px'}}
               required
