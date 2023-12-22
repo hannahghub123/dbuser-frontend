@@ -29,7 +29,7 @@ const AddDocumentsModal = (props) => {
 
   const [ws, setWs] = useState(null);
   // const [documents, setDocuments] = useState([]);
-  const [userId, setUserId] = useState(false)
+  const [userId, setUserId] = useState("")
   const dispatch = useDispatch()
   const updatedData = useSelector((state)=>state.documentReducer)
 
@@ -42,13 +42,14 @@ const AddDocumentsModal = (props) => {
 
     socket.onopen = () => {
       console.log('WebSocket connected');
-      // if (userData) {
-      //   const parseData = JSON.parse(userData);
-      //   const userId = parseData.id;
-      //   setUserId(userId)
+
+      if (userData) {
+        const parseData = JSON.parse(userData);
+        const userId = parseData.id;
+        setUserId(userId)
         // Fetch initial documents when WebSocket connection is open
-        // socket.send(JSON.stringify({ action: 'get_documents', userId: userId }));
-      // }
+        socket.send(JSON.stringify({ action: 'get_documents', userId: userId }));
+      }
     };
 
     socket.onmessage = (event) => {
@@ -74,6 +75,7 @@ const AddDocumentsModal = (props) => {
 
   const addDocument = (e) => {
     e.preventDefault()
+
     const documentData = {
       'userId' : userId,
       'title': documentTitle,

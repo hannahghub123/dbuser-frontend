@@ -26,6 +26,7 @@ const Login = () => {
           });
     
           const { access_token, refresh_token, message, userDetails } = response.data;
+          console.log(message)
 
           if (message === "User loggedIn successfully"){
             // Store tokens in local storage
