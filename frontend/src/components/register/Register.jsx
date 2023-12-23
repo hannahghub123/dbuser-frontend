@@ -10,11 +10,9 @@ import Typography from "@mui/joy/Typography";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axios/Axios";
 import { useDispatch } from "react-redux";
-import { changeEmail, changeOTP } from "../../features/otpSlice";
 
 const Register = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");

@@ -4,7 +4,7 @@ import { styled } from "@mui/joy/styles";
 import Grid from "@mui/joy/Grid";
 import Sheet from "@mui/joy/Sheet";
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from "../services/AxiosInstance";
+import axiosInstance from "../../axios/Axios";
 
 
 const Item = styled(Sheet)(({ theme }) => ({
