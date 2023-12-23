@@ -22,13 +22,12 @@ const style = {
   p: 4,
 };
 
-const AddDocumentsModal = (props) => {
+const AddDocumentsModal = ({setShowAddModal, setMyDocuments}) => {
   const [open, setOpen] = useState(true);
   const [documentTitle, setDocumentTitle] = useState("");
   const [documentContent, setDocumentContent] = useState("");
 
   const [ws, setWs] = useState(null);
-  // const [documents, setDocuments] = useState([]);
   const [userId, setUserId] = useState("")
   const dispatch = useDispatch()
   const updatedData = useSelector((state)=>state.documentReducer)
@@ -61,6 +60,13 @@ const AddDocumentsModal = (props) => {
         dispatch(changeContent(data.documents.content))
         dispatch(changeCreatedAt(data.documents.created_at))
         dispatch(changeTitle(data.documents.title))
+
+      }
+
+      if (data.action === 'documents_fetched') {
+        const value = data.documents
+        console.log(value,"value here in mydocuments");
+        setMyDocuments(value);
       }
     };
 
@@ -88,7 +94,7 @@ const AddDocumentsModal = (props) => {
 
   const handleClose = () => {
     setOpen(false)
-    props.setShowAddModal((prev)=>!prev)
+    setShowAddModal((prev)=>!prev)
   };
 
   

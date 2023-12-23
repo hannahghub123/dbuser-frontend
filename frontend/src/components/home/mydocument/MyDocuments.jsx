@@ -5,8 +5,12 @@ import { styled } from "@mui/joy/styles";
 import Grid from "@mui/joy/Grid";
 import Sheet from "@mui/joy/Sheet";
 import { useSelector } from "react-redux";
-import axiosInstance from "../../../axios/Axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "../Style.css";
+import EditDocumentModal from "./EditDocumentModal";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../../axios/Axios";
 
 const Item = styled(Sheet)(({ theme }) => ({
   backgroundColor:
@@ -19,13 +23,35 @@ const Item = styled(Sheet)(({ theme }) => ({
 }));
 
 const MyDocuments = () => {
+
   const [ws, setWs] = useState(null);
-  const [documents, setDocuments] = useState([]);
+  const [editDocuments, setEditDocuments] = useState(false);
   const [mydocuments, setMyDocuments] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
-  const updatedDocuments = useSelector((state) => state.documentReducer.value);
+  const [documentId, setDocumentId] = useState(null)
+  const [ getDocuments, setGetDocuments] = useState([])
+  const [name, setName] = useState("")
+  const [ render, setRender] = useState(false)
 
-  console.log(updatedDocuments, "in my documents");
+  const navigate = useNavigate()
+
+//   console.log(updatedDocuments, "in my documents");
+
+    useEffect(()=>{
+        const userData = localStorage.getItem("userDetails");
+        if (userData) {
+            const parseData = JSON.parse(userData);
+            const userId = parseData.id
+            const values = {
+                id:userId,
+            }
+            axiosInstance.post("get-documents/", values).then((res) => {
+                setGetDocuments(res.data.documents);
+            });
+            
+          }
+        
+    },[render])
 
   useEffect(() => {
     const socket = new W3CWebSocket("ws://localhost:8000/ws/documents/");
@@ -38,44 +64,35 @@ const MyDocuments = () => {
         const parseData = JSON.parse(userData);
         const userId = parseData.id
 
+        setName(userId)
+
         const values = {
           id: userId,
         };
         console.log(values, "joooooooooooooooooooo");
-
-        axiosInstance.post("get-documents/", values).then((res) => {
-          setMyDocuments(res.data.documents);
-        });
 
         socket.send(JSON.stringify({ action: 'get_documents', userId: userId }));
 
       }
     };
 
-    console.log(mydocuments, "mydocuments");
+    console.log(mydocuments, "mydocuments---------");
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       console.log(data, "data in onmessage//////");
 
-      console.log(event.data, "event///");
-
-      // Assuming the server sends updated documents as part of the response
-      if (data.action === "document_added") {
-        const value = data.documents;
-        // setDocuments({ ...documents, value });
-        // setMyDocuments(value);
-
-        console.log(value,"in document deleted method!!");
-      }
-
         if (data.action === 'documents_fetched') {
           const value = data.documents
-          console.log(value,"value here in mydocuments");
+          console.log(value,"value here in mydocuments-----demooooo");
           setMyDocuments(value);
         }
 
         if (data.action === 'documents_deleted') {
+            toast.success("Document Deleted !!", {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 3000,
+              });
             const value = data.documents
             console.log(value,"value here in mydocuments");
             setMyDocuments(value);
@@ -90,11 +107,38 @@ const MyDocuments = () => {
     setWs(socket);
 
     // No return cleanup function is needed here
-  }, []); // Empty dependency array ensures the effect runs once after the initial render
+  }, [render]); // Empty dependency array ensures the effect runs once after the initial render
 
-  //   const editDocument = (documentId) => {
-  //     ws.send(JSON.stringify({ action: 'edit_document', documentData }));
-  //   };
+
+  const documentEditHandle=(id)=>{
+    setEditDocuments(!editDocuments);
+    setDocumentId(id)
+  }
+
+    // const editDocument = (documentId) => {
+    //   ws.send(JSON.stringify({ action: 'edit_document', documentData }));
+    // };
+
+
+  const DeleteHandle=(id)=>{
+    showDeleteConfirmation(id);
+  }
+
+  const showDeleteConfirmation = (id) => {
+    toast.info(
+      <div>
+        <p>Are you sure you want to delete this document ?</p>
+        <button className='ml-5 mr-5' onClick={() => deleteDocument(id)}>Delete</button>
+        <button className='ml-3' onClick={toast.dismiss}>Cancel</button>
+      </div>,
+      {
+        position: 'top-center',
+        autoClose: false,
+        closeOnClick: true,
+        closeButton: false,
+      }
+    );
+  };
 
   const deleteDocument = (documentId) => {
     console.log(documentId, "JJJJJJJJJJSSSSSSSSSSSSSSSSSSSSS");
@@ -105,12 +149,18 @@ const MyDocuments = () => {
     setShowAddModal(!showAddModal);
   };
 
+  const homeHandle=()=>{
+    navigate('../home')
+  }
+
   return (
     <div>
       <h1>My Documents</h1>
+      <h1>{name}</h1>
       {/* Your document display logic goes here */}
 
       <button onClick={openAddModal}>Add Document</button>
+      <button onClick={homeHandle}>Home</button>
 
       {/* <button onClick={() => editDocument({})}>
         Edit Document
@@ -132,8 +182,8 @@ const MyDocuments = () => {
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           sx={{ width: "100%" }}
         >
-          {mydocuments &&
-            mydocuments.map((item) => (
+          {getDocuments &&
+            getDocuments.map((item) => (
               <Grid xs={6}>
                 <Item>
                   <div className="d-flex flex-row justify-content-between ">
@@ -145,11 +195,11 @@ const MyDocuments = () => {
                     </div>
 
                     <div className="icon-container">
-                      {/* <span className='ml-4 ' onClick={()=>editDocument(item.id)}><i className="fas fa-edit icon"></i></span>  */}
+                      <span className='ml-4 ' onClick={()=>documentEditHandle(item._id)}><i className="fas fa-edit icon"></i></span> 
 
                       <span
                         className="ml-1 "
-                        onClick={() => deleteDocument(item._id)}
+                        onClick={() => DeleteHandle(item._id)}
                       >
                         <i className="fas fa-trash icon"></i>
                       </span>
@@ -162,6 +212,7 @@ const MyDocuments = () => {
       </div>
 
       {showAddModal && <AddDocumentsModal setShowAddModal={setShowAddModal} setMyDocuments={setMyDocuments} />}
+      {editDocuments? <EditDocumentModal documentId={documentId} setEditDocuments={setEditDocuments} setRender={setRender} /> : null}
     </div>
   );
 };
