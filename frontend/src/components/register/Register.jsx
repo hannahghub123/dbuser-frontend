@@ -9,9 +9,12 @@ import Divider from "@mui/joy/Divider";
 import Typography from "@mui/joy/Typography";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axios/Axios";
+import { useDispatch } from "react-redux";
+import { changeEmail, changeOTP } from "../../features/otpSlice";
 
 const Register = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -29,9 +32,21 @@ const Register = () => {
         password2,
       });
 
-      console.log(response.data);
+      console.log(response.data,"//////??hi");
       if (response.data.message === "User registered successfully") {
-        navigate("../login");
+
+        const responseOtp = response.data.OTP;
+        const responseEmail = response.data.email;
+
+        const values ={
+          otp: responseOtp,
+          email : responseEmail
+        }
+
+        localStorage.setItem("OTPDetails",JSON.stringify(values))
+
+
+        navigate("../otp-register/");
       }
     } catch (error) {
       console.error("Registration failed:", error.response.data);
@@ -43,7 +58,6 @@ const Register = () => {
   };
   return (
     <div>
-      {/* <h2>Register</h2> */}
       <form onSubmit={handleSubmit}>
         <Box
           sx={{

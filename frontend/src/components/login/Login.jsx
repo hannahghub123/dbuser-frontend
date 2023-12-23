@@ -43,6 +43,10 @@ const Login = () => {
       const signupHandle=()=>{
         navigate('../register')
     }
+
+    const passwordHandle=()=>{
+      navigate('../email-enter')
+    }
   return (
     <div>
         <form onSubmit={handleSubmit}>
@@ -82,11 +86,12 @@ const Login = () => {
               />
               <Divider />
               <CardActions>
-                <Button variant="contained" color="primary" type="submit">
+                <Button type="submit">
                   Submit Form
                 </Button>
               </CardActions>
               <Button onClick={signupHandle}>Create Account and Login?</Button>
+              <Button onClick={passwordHandle}>Forgot Password?</Button>
             </CardContent>
           </Card>
         </Box>
