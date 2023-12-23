@@ -10,6 +10,7 @@ import Typography from "@mui/joy/Typography";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axios/Axios";
 import { useDispatch } from "react-redux";
+import Navbar from "../navbar/Navbar";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -56,6 +57,7 @@ const Register = () => {
   };
   return (
     <div>
+      <Navbar/>
       <form onSubmit={handleSubmit}>
         <Box
           sx={{
@@ -110,11 +112,11 @@ const Register = () => {
               />
               <Divider />
               <CardActions>
-                <Button variant="contained" color="primary" type="submit">
+                <Button  color="primary" type="submit">
                   Submit Form
                 </Button>
               </CardActions>
-              <Button onClick={loginHandle}>Already a User?</Button>
+              <Button variant="contained" onClick={loginHandle}>Already a User?</Button>
             </CardContent>
           </Card>
         </Box>

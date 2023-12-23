@@ -32,7 +32,6 @@ const AddDocumentsModal = ({setShowAddModal, setMyDocuments}) => {
   const dispatch = useDispatch()
   const updatedData = useSelector((state)=>state.documentReducer)
 
-  console.log(updatedData,"updated data here");
 
   useEffect(() => {
     const socket = new W3CWebSocket('ws://localhost:8000/ws/documents/');
@@ -53,9 +52,7 @@ const AddDocumentsModal = ({setShowAddModal, setMyDocuments}) => {
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log(data, "data in onmessage//////modal");
 
-      // Assuming the server sends updated documents as part of the response
       if (data.action === 'document_added') {
         dispatch(changeContent(data.documents.content))
         dispatch(changeCreatedAt(data.documents.created_at))
@@ -65,7 +62,6 @@ const AddDocumentsModal = ({setShowAddModal, setMyDocuments}) => {
 
       if (data.action === 'documents_fetched') {
         const value = data.documents
-        console.log(value,"value here in mydocuments");
         setMyDocuments(value);
       }
     };
@@ -76,7 +72,6 @@ const AddDocumentsModal = ({setShowAddModal, setMyDocuments}) => {
 
     setWs(socket);
 
-    // Note: No return cleanup function is needed here
   }, []);
 
   const addDocument = (e) => {
@@ -87,8 +82,9 @@ const AddDocumentsModal = ({setShowAddModal, setMyDocuments}) => {
       'title': documentTitle,
       'content' : documentContent
     }
-    console.log(documentData,"documentdata///");
+
     ws.send(JSON.stringify({ action: 'add_document', documentData }));
+
     handleClose();
   };
 

@@ -4,6 +4,7 @@ import { styled } from "@mui/joy/styles";
 import Grid from "@mui/joy/Grid";
 import Sheet from "@mui/joy/Sheet";
 import { useNavigate } from 'react-router-dom'
+import Navbar from "../navbar/Navbar";
 
 const Item = styled(Sheet)(({ theme }) => ({
   backgroundColor:
@@ -60,6 +61,7 @@ const Documents = () => {
 
   return (
     <div>
+      <Navbar/>
       <h1>Documents</h1>
       <button onClick={coverpageHandle}>Cover page</button>
 

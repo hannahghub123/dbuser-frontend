@@ -5,6 +5,7 @@ import Grid from "@mui/joy/Grid";
 import Sheet from "@mui/joy/Sheet";
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from "../../axios/Axios";
+import Navbar from "../navbar/Navbar";
 
 
 const Item = styled(Sheet)(({ theme }) => ({
@@ -55,33 +56,12 @@ const Home = () => {
   }, []); // Empty dependency array ensures the effect runs once after the initial render
 
 
-  const logoutHandle = async (e) => {
-    e.preventDefault();
 
-    try {
-      const response = await axiosInstance.post("logout/");
-
-      console.log(response.data);
-      if (response.data.message === "User loggedOut successfully") {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-        localStorage.removeItem("userDetails");
-        navigate("../");
-      }
-    } catch (error) {
-      console.error("failed:", error.response.data);
-    }
-  };
-
-  const documentsHandle=()=>{
-    navigate('../mydocuments')
-  }
 
   return (
     <div>
-      <h1>Home page Log in Successful</h1>
-      <button onClick={logoutHandle}>Logout</button>
-      <button onClick={documentsHandle}>MyDocuments</button>
+      <Navbar/>
+      <h1>Home page</h1>
 
       <div className="container">
         <Grid
@@ -102,16 +82,6 @@ const Home = () => {
                       {item.content}
                     </div>
 
-                    <div className="icon-container">
-                      {/* <span className='ml-4 ' onClick={()=>documentEditHandle(item._id)}><i className="fas fa-edit icon"></i></span>  */}
-
-                      {/* <span
-                        className="ml-1 "
-                        onClick={() => DeleteHandle(item._id)}
-                      >
-                        <i className="fas fa-trash icon"></i>
-                      </span> */}
-                    </div>
                   </div>
                 </Item>
               </Grid>

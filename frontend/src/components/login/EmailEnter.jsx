@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import Divider from "@mui/joy/Divider";
 import Typography from "@mui/joy/Typography";
 import axiosInstance from "../../axios/Axios";
+import Navbar from "../navbar/Navbar";
 
 const EmailEnter = () => {
 
@@ -29,6 +30,7 @@ const EmailEnter = () => {
 
   return (
     <div>
+      <Navbar/>
       <form onSubmit={handleSubmit}>
         <Box
           sx={{
