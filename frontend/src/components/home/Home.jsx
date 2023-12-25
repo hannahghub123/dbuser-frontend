@@ -3,10 +3,9 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { styled } from "@mui/joy/styles";
 import Grid from "@mui/joy/Grid";
 import Sheet from "@mui/joy/Sheet";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axios/Axios";
 import Navbar from "../navbar/Navbar";
-
 
 const Item = styled(Sheet)(({ theme }) => ({
   backgroundColor:
@@ -19,8 +18,6 @@ const Item = styled(Sheet)(({ theme }) => ({
 }));
 
 const Home = () => {
-  const navigate = useNavigate();
-
   const [ws, setWs] = useState(null);
   const [documents, setDocuments] = useState([]);
 
@@ -30,20 +27,17 @@ const Home = () => {
     socket.onopen = () => {
       console.log("WebSocket connected");
 
-        socket.send(JSON.stringify({ action: 'get_all_documents' }));
-
+      socket.send(JSON.stringify({ action: "get_all_documents" }));
     };
-
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
 
-        if (data.action === 'all_documents_fetched') {
-          const value = data.documents
-          console.log(value,"value here in main documents");
-          setDocuments(value);
-        }
-
+      if (data.action === "all_documents_fetched") {
+        const value = data.documents;
+        console.log(value, "value here in main documents");
+        setDocuments(value);
+      }
     };
 
     socket.onclose = () => {
@@ -55,13 +49,10 @@ const Home = () => {
     // No return cleanup function is needed here
   }, []); // Empty dependency array ensures the effect runs once after the initial render
 
-
-
-
   return (
     <div>
-      <Navbar/>
-      <h1>Home page</h1>
+      <Navbar />
+      <h1 style={{ textAlign: "center", marginTop: "10px" }} className="mt-4 mb-2"><b>Home page</b> </h1>
 
       <div className="container">
         <Grid
@@ -76,12 +67,11 @@ const Home = () => {
                 <Item>
                   <div className="d-flex flex-row justify-content-between ">
                     <div className="notes-text">
-                      {item.title}
+                      <h5>User Id - {item.user}</h5>
+                      <b>Title - {item.title}</b>
                       <br />
-                      hii
                       {item.content}
                     </div>
-
                   </div>
                 </Item>
               </Grid>

@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 // import { useDispatch, useSelector } from 'react-redux';
 // import {changeNotes} from '../../features/notesEditSlice';
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
+import { Button } from '@mui/material';
 
 const style = {
     position: 'absolute',
@@ -140,9 +141,9 @@ const EditDocumentModal = ({documentId,setEditDocuments,setRender}) => {
 
           <br /><br />
 
-          <button className='edit-btn'  onClick={handleSubmit}>
+          <Button variant='contained' style={{marginLeft:'100px'}}  onClick={handleSubmit}>
            Edit Notes
-          </button>
+          </Button>
         </Box>
       </Modal>
     </>

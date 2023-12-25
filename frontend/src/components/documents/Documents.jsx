@@ -17,14 +17,9 @@ const Item = styled(Sheet)(({ theme }) => ({
 }));
 
 const Documents = () => {
-  const navigate = useNavigate()
 
   const [ws, setWs] = useState(null);
   const [documents, setDocuments] = useState([]);
-
-  const coverpageHandle=()=>{
-    navigate('../')
-  }
 
   useEffect(() => {
     const socket = new W3CWebSocket("ws://localhost:8000/ws/documents/");
@@ -39,11 +34,9 @@ const Documents = () => {
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log(data,"data here in main documents############");
 
         if (data.action === 'all_documents_fetched') {
           const value = data.documents
-          console.log(value,"value here in main documents############");
           setDocuments(value);
         }
 
@@ -62,8 +55,8 @@ const Documents = () => {
   return (
     <div>
       <Navbar/>
-      <h1>Documents</h1>
-      <button onClick={coverpageHandle}>Cover page</button>
+      <h1 style={{textAlign:'center'}} className="mt-4 mb-2"><b>All Documents</b></h1>
+      {/* <button onClick={coverpageHandle}>Cover page</button> */}
 
       <div className="container">
         <Grid
@@ -77,8 +70,10 @@ const Documents = () => {
               <Grid xs={6}>
                 <Item>
                   <div className="d-flex flex-row justify-content-between ">
+                    
                     <div className="notes-text">
-                      {item.title}
+                    <h5>User Id - {item.user}</h5>
+                      <b>Title - {item.title}</b>
                       <br />
                       hii
                       {item.content}

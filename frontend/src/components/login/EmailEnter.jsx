@@ -65,8 +65,8 @@ const EmailEnter = () => {
 
               <Divider />
               <CardActions>
-                <Button variant="contained" color="primary" type="submit">
-                  Send OTP
+                <Button variant="contained" type="submit">
+                  Click Here to Send OTP
                 </Button>
               </CardActions>
             </CardContent>
