@@ -3,8 +3,6 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { styled } from "@mui/joy/styles";
 import Grid from "@mui/joy/Grid";
 import Sheet from "@mui/joy/Sheet";
-import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../axios/Axios";
 import Navbar from "../navbar/Navbar";
 
 const Item = styled(Sheet)(({ theme }) => ({
@@ -52,7 +50,12 @@ const Home = () => {
   return (
     <div>
       <Navbar />
-      <h1 style={{ textAlign: "center", marginTop: "10px" }} className="mt-4 mb-2"><b>Home page</b> </h1>
+      <h1
+        style={{ textAlign: "center", marginTop: "10px" }}
+        className="mt-4 mb-2"
+      >
+        <b>Home page</b>{" "}
+      </h1>
 
       <div className="container">
         <Grid

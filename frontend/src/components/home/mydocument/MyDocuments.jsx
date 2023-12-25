@@ -129,13 +129,13 @@ const MyDocuments = () => {
     toast.info(
       <div>
         <p>Are you sure you want to delete this document ?</p>
-        <div style={{display:'flex', justifyContent:'space-around'}}>
-        <Button variant="contained" onClick={() => deleteDocument(id)}>
-          Delete
-        </Button>
-        <Button variant="contained" onClick={toast.dismiss}>
-          Cancel
-        </Button>
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
+          <Button variant="contained" onClick={() => deleteDocument(id)}>
+            Delete
+          </Button>
+          <Button variant="contained" onClick={toast.dismiss}>
+            Cancel
+          </Button>
         </div>
       </div>,
       {
@@ -160,10 +160,14 @@ const MyDocuments = () => {
     <>
       <Navbar />
       <div style={{ marginTop: "10px" }}>
-        <h1 style={{ textAlign: "center" }} className="mt-4 mb-2"><b>{name}'s - My Documents</b></h1>
+        <h1 style={{ textAlign: "center" }} className="mt-4 mb-2">
+          <b>{name}'s - My Documents</b>
+        </h1>
 
         <div className="notes">
-          <h4><b>ADD NOTES</b></h4>
+          <h4>
+            <b>ADD NOTES</b>
+          </h4>
           <span onClick={openAddModal}>
             <i class="fa fa-plus icon" aria-hidden="true"></i>
           </span>

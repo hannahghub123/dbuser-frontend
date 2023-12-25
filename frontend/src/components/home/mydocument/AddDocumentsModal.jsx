@@ -129,7 +129,9 @@ const AddDocumentsModal = ({
               onChange={(e) => setDocumentContent(e.target.value)}
             />
 
-            <Button variant="contained" style={{marginLeft:'80px'}}>Click to Submit</Button>
+            <Button variant="contained" style={{ marginLeft: "80px" }}>
+              Click to Submit
+            </Button>
           </form>
         </Box>
       </Modal>

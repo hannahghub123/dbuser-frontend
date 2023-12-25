@@ -110,7 +110,7 @@ const Navbar = () => {
                     display: { xs: "block", md: "none" },
                   }}
                 >
-                   {!accessToken && (
+                  {!accessToken && (
                     <Link to="../">
                       <MenuItem onClick={handleCloseNavMenu}>
                         <Typography textAlign="center">CoverPage</Typography>
@@ -138,7 +138,7 @@ const Navbar = () => {
                       </MenuItem>
                     </Link>
                   )}
-                   {accessToken && (
+                  {accessToken && (
                     <Link to="../home">
                       <MenuItem onClick={handleCloseNavMenu}>
                         <Typography textAlign="center">Home</Typography>
